@@ -1,0 +1,2272 @@
+definitions:
+  analyze.SpaceCategoryAnalyzeRequest:
+    properties:
+      queryAll:
+        description: 是否查询所有空间
+        type: boolean
+      queryPublic:
+        description: 是否查询公开空间
+        type: boolean
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+    type: object
+  analyze.SpaceCategoryAnalyzeResponse:
+    properties:
+      category:
+        description: 分类名称
+        type: string
+      count:
+        description: 分类数量
+        type: integer
+      totalSize:
+        description: 分类总大小
+        type: integer
+    type: object
+  analyze.SpaceRankAnalyzeRequest:
+    properties:
+      top_n:
+        description: 排名前N的空间
+        type: integer
+    type: object
+  analyze.SpaceSizeAnalyzeRequest:
+    properties:
+      queryAll:
+        description: 是否查询所有空间
+        type: boolean
+      queryPublic:
+        description: 是否查询公开空间
+        type: boolean
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+    type: object
+  analyze.SpaceSizeAnalyzeResponse:
+    properties:
+      count:
+        description: 分类数量
+        type: integer
+      sizeRange:
+        description: 大小范围，格式为"<100KB","100KB-500KB","500KB-1MB",">1MB"
+        type: string
+    type: object
+  analyze.SpaceTagAnalyzeRequest:
+    properties:
+      queryAll:
+        description: 是否查询所有空间
+        type: boolean
+      queryPublic:
+        description: 是否查询公开空间
+        type: boolean
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+    type: object
+  analyze.SpaceTagAnalyzeResponse:
+    properties:
+      count:
+        description: 标签数量
+        type: integer
+      tag:
+        description: 标签名称
+        type: string
+    type: object
+  analyze.SpaceUsageAnalyzeRequest:
+    properties:
+      queryAll:
+        description: 是否查询所有空间
+        type: boolean
+      queryPublic:
+        description: 是否查询公开空间
+        type: boolean
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+    type: object
+  analyze.SpaceUsageAnalyzeResponse:
+    properties:
+      countUsageRatio:
+        description: 资源数量使用比例
+        type: number
+      maxCount:
+        description: 最大资源数量
+        type: integer
+      maxSize:
+        description: 最大空间大小
+        type: integer
+      sizeUsageRatio:
+        description: 空间使用比例
+        type: number
+      usedCount:
+        description: 已使用的资源数量
+        type: integer
+      usedSize:
+        description: 已使用的空间大小
+        type: integer
+    type: object
+  analyze.SpaceUserAnalyzeRequest:
+    properties:
+      queryAll:
+        description: 是否查询所有空间
+        type: boolean
+      queryPublic:
+        description: 是否查询公开空间
+        type: boolean
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+      timeDimension:
+        description: 时间维度：day/week/month
+        type: string
+      userId:
+        description: 用户ID
+        example: ""
+        type: string
+    type: object
+  analyze.SpaceUserAnalyzeResponse:
+    properties:
+      count:
+        description: 周期内上传的图片数量
+        type: integer
+      period:
+        description: 时间周期
+        type: string
+    type: object
+  common.DeleteRequest:
+    properties:
+      id:
+        example: ""
+        type: string
+    required:
+    - id
+    type: object
+  common.Response:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+  entity.Picture:
+    properties:
+      category:
+        type: string
+      createTime:
+        type: string
+      editTime:
+        type: string
+      id:
+        example: ""
+        type: string
+      introduction:
+        type: string
+      name:
+        type: string
+      picColor:
+        type: string
+      picFormat:
+        type: string
+      picHeight:
+        type: integer
+      picScale:
+        type: number
+      picSize:
+        type: integer
+      picWidth:
+        type: integer
+      reviewMessage:
+        type: string
+      reviewStatus:
+        type: integer
+      reviewTime:
+        type: string
+      reviewerId:
+        example: ""
+        type: string
+      spaceId:
+        example: ""
+        type: string
+      tags:
+        description: 存储的格式：["golang","java","c++"]
+        type: string
+      thumbnailUrl:
+        type: string
+      updateTime:
+        type: string
+      url:
+        type: string
+      userId:
+        example: ""
+        type: string
+    type: object
+  entity.Space:
+    properties:
+      createTime:
+        type: string
+      editTime:
+        type: string
+      id:
+        example: ""
+        type: string
+      maxCount:
+        type: integer
+      maxSize:
+        type: integer
+      spaceLevel:
+        type: integer
+      spaceName:
+        type: string
+      spaceType:
+        type: integer
+      totalCount:
+        type: integer
+      totalSize:
+        type: integer
+      updateTime:
+        type: string
+      userId:
+        example: ""
+        type: string
+    type: object
+  entity.SpaceUser:
+    properties:
+      createTime:
+        type: string
+      id:
+        example: ""
+        type: string
+      spaceId:
+        example: ""
+        type: string
+      spaceRole:
+        type: string
+      updateTime:
+        type: string
+      userId:
+        example: ""
+        type: string
+    type: object
+  model.ImageSearchResult:
+    properties:
+      fromURL:
+        description: 来源地址
+        type: string
+      thumbURL:
+        description: 缩略图地址
+        type: string
+    type: object
+  picture.CreateOutPaintingTaskRequest:
+    properties:
+      parameters:
+        allOf:
+        - $ref: '#/definitions/picture.ImageParameters'
+        description: 图像处理任务的参数
+      pictureId:
+        description: 图片ID
+        example: ""
+        type: string
+    type: object
+  picture.CreateOutPaintingTaskResponse:
+    properties:
+      code:
+        description: 错误码（失败时返回）
+        type: string
+      message:
+        description: 错误信息（失败时返回）
+        type: string
+      output:
+        allOf:
+        - $ref: '#/definitions/picture.Output'
+        description: 任务输出信息（成功时返回）
+      requestId:
+        description: 请求唯一标识符
+        type: string
+    type: object
+  picture.GetOutPaintingResponse:
+    properties:
+      output:
+        allOf:
+        - $ref: '#/definitions/picture.TaskDetailOutput'
+        description: 任务输出信息（一定包含）
+      requestId:
+        description: 请求唯一标识
+        type: string
+      usage:
+        allOf:
+        - $ref: '#/definitions/picture.Usage'
+        description: 图像统计信息（仅在成功时返回）
+    type: object
+  picture.ImageParameters:
+    properties:
+      addWatermark:
+        description: 是否添加水印
+        type: boolean
+      angle:
+        description: 图像旋转角度（单位：度）
+        type: integer
+      bestQuality:
+        description: 是否启用最佳质量
+        type: boolean
+      bottomOffset:
+        description: 图像底部的偏移量
+        type: integer
+      leftOffset:
+        description: 图像左侧的偏移量
+        type: integer
+      limitImageSize:
+        description: 是否限制图像大小
+        type: boolean
+      outputRatio:
+        description: 输出图像的宽高比（例如："16:9"）
+        type: string
+      rightOffset:
+        description: 图像右侧的偏移量
+        type: integer
+      topOffset:
+        description: 图像顶部的偏移量
+        type: integer
+      xScale:
+        description: 图像的水平缩放比例，范围在1.0 ~ 3.0
+        type: number
+      yScale:
+        description: 图像的垂直缩放比例，范围在1.0 ~ 3.0
+        type: number
+    type: object
+  picture.ListPictureResponse:
+    properties:
+      current:
+        description: 当前页数
+        type: integer
+      pages:
+        description: 总页数
+        type: integer
+      records:
+        items:
+          $ref: '#/definitions/entity.Picture'
+        type: array
+      size:
+        description: 页面大小
+        type: integer
+      total:
+        description: 总记录数
+        type: integer
+    type: object
+  picture.ListPictureVOResponse:
+    properties:
+      current:
+        description: 当前页数
+        type: integer
+      pages:
+        description: 总页数
+        type: integer
+      records:
+        items:
+          $ref: '#/definitions/picture.PictureVO'
+        type: array
+      size:
+        description: 页面大小
+        type: integer
+      total:
+        description: 总记录数
+        type: integer
+    type: object
+  picture.Output:
+    properties:
+      taskId:
+        description: 任务的唯一标识符
+        type: string
+      taskStatus:
+        description: 任务状态：PENDING、RUNNING、SUSPENDED、SUCCEEDED、FAILED、UNKNOWN
+        type: string
+    type: object
+  picture.PictureEditByBatchRequest:
+    properties:
+      category:
+        description: 分类
+        type: string
+      nameRule:
+        description: 名称规则，暂时只支持“名称{序号}的形式，序号将会自动递增”
+        type: string
+      pictureIdList:
+        description: 图片ID列表
+        items:
+          type: string
+        type: array
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+      tags:
+        description: 标签
+        items:
+          type: string
+        type: array
+    type: object
+  picture.PictureEditRequest:
+    properties:
+      category:
+        type: string
+      id:
+        example: ""
+        type: string
+      introduction:
+        type: string
+      name:
+        type: string
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
+  picture.PictureQueryRequest:
+    properties:
+      category:
+        type: string
+      current:
+        description: 当前页数
+        type: integer
+      endEditTime:
+        description: 结束编辑时间
+        type: string
+      id:
+        description: 图片ID
+        example: ""
+        type: string
+      introduction:
+        type: string
+      isNullSpaceId:
+        description: 是否查询空间ID为空的图片
+        type: boolean
+      name:
+        type: string
+      pageSize:
+        description: 页面大小
+        type: integer
+      picFormat:
+        type: string
+      picHeight:
+        type: integer
+      picScale:
+        type: number
+      picSize:
+        type: integer
+      picWidth:
+        type: integer
+      reviewMessage:
+        type: string
+      reviewStatus:
+        description: 新增审核字段
+        example: ""
+        type: string
+      reviewerId:
+        description: 审核人ID
+        example: ""
+        type: string
+      searchText:
+        description: 搜索词
+        type: string
+      sortField:
+        description: 排序字段
+        type: string
+      sortOrder:
+        description: 排序顺序（默认升序）
+        type: string
+      spaceId:
+        description: 新增空间筛选字段
+        example: ""
+        type: string
+      startEditTime:
+        description: 开始编辑时间
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      userId:
+        description: 图片上传人信息
+        example: ""
+        type: string
+    type: object
+  picture.PictureReviewRequest:
+    properties:
+      id:
+        description: 图片ID
+        example: ""
+        type: string
+      reviewMessage:
+        description: 审核信息
+        type: string
+      reviewStatus:
+        description: 审核状态
+        type: integer
+    type: object
+  picture.PictureSearchByColorRequest:
+    properties:
+      picColor:
+        description: 图片颜色
+        type: string
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+    type: object
+  picture.PictureSearchByPictureRequest:
+    properties:
+      pictureId:
+        description: 图片ID
+        example: ""
+        type: string
+    type: object
+  picture.PictureTagCategory:
+    properties:
+      categoryList:
+        items:
+          type: string
+        type: array
+      tagList:
+        items:
+          type: string
+        type: array
+    type: object
+  picture.PictureUpdateRequest:
+    properties:
+      category:
+        type: string
+      id:
+        example: ""
+        type: string
+      introduction:
+        type: string
+      name:
+        type: string
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
+  picture.PictureUploadRequest:
+    properties:
+      fileUrl:
+        description: 图片地址
+        type: string
+      id:
+        description: 图片ID
+        example: ""
+        type: string
+      picName:
+        description: 图片名称
+        type: string
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+    type: object
+  picture.PictureVO:
+    properties:
+      category:
+        type: string
+      createTime:
+        type: string
+      editTime:
+        type: string
+      id:
+        example: "0"
+        type: string
+      introduction:
+        type: string
+      name:
+        type: string
+      permissionList:
+        description: 空间的权限列表
+        items:
+          type: string
+        type: array
+      picColor:
+        type: string
+      picFormat:
+        type: string
+      picHeight:
+        type: integer
+      picScale:
+        type: number
+      picSize:
+        type: integer
+      picWidth:
+        type: integer
+      spaceId:
+        example: "0"
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      thumbnailUrl:
+        type: string
+      updateTime:
+        type: string
+      url:
+        type: string
+      user:
+        $ref: '#/definitions/user.UserVO'
+      userId:
+        example: "0"
+        type: string
+    type: object
+  picture.TaskDetailOutput:
+    properties:
+      code:
+        description: 错误码（失败时返回）
+        type: string
+      endTime:
+        description: 任务完成时间（成功或失败时返回）
+        type: string
+      message:
+        description: 错误信息（失败时返回）
+        type: string
+      outputImageUrl:
+        description: 输出图像的 URL（成功时返回）
+        type: string
+      scheduledTime:
+        description: 任务调度时间（成功或失败时返回）
+        type: string
+      submitTime:
+        description: 任务提交时间（成功或失败时返回）
+        type: string
+      taskId:
+        description: 任务的唯一标识符
+        type: string
+      taskMetrics:
+        allOf:
+        - $ref: '#/definitions/picture.TaskMetrics'
+        description: 任务结果统计（执行中时返回）
+      taskStatus:
+        description: 任务状态：PENDING、RUNNING、SUSPENDED、SUCCEEDED、FAILED、UNKNOWN
+        type: string
+    type: object
+  picture.TaskMetrics:
+    properties:
+      failed:
+        description: 失败任务数
+        type: integer
+      succeeded:
+        description: 成功任务数
+        type: integer
+      total:
+        description: 总任务数
+        type: integer
+    type: object
+  picture.Usage:
+    properties:
+      imageCount:
+        description: 生成的图片数量
+        type: integer
+    type: object
+  space.ListSpaceResponse:
+    properties:
+      current:
+        description: 当前页数
+        type: integer
+      pages:
+        description: 总页数
+        type: integer
+      records:
+        items:
+          $ref: '#/definitions/entity.Space'
+        type: array
+      size:
+        description: 页面大小
+        type: integer
+      total:
+        description: 总记录数
+        type: integer
+    type: object
+  space.ListSpaceVOResponse:
+    properties:
+      current:
+        description: 当前页数
+        type: integer
+      pages:
+        description: 总页数
+        type: integer
+      records:
+        items:
+          $ref: '#/definitions/space.SpaceVO'
+        type: array
+      size:
+        description: 页面大小
+        type: integer
+      total:
+        description: 总记录数
+        type: integer
+    type: object
+  space.SpaceAddRequest:
+    properties:
+      spaceLevel:
+        description: 空间级别：0-普通版 1-专业版 2-旗舰版
+        type: integer
+      spaceName:
+        description: 空间名称
+        type: string
+      spaceType:
+        description: 空间类型：0-个人空间 1-团队空间
+        type: integer
+    type: object
+  space.SpaceEditRequest:
+    properties:
+      id:
+        description: Space ID
+        example: ""
+        type: string
+      spaceName:
+        description: Space name
+        type: string
+    type: object
+  space.SpaceLevelResponse:
+    properties:
+      maxCount:
+        description: 空间图片的最大数量
+        type: integer
+      maxSize:
+        description: 空间图片的最大总大小
+        type: integer
+      text:
+        description: 空间的等级名称
+        type: string
+      value:
+        description: 空间的等级
+        type: integer
+    type: object
+  space.SpaceQueryRequest:
+    properties:
+      current:
+        description: 当前页数
+        type: integer
+      id:
+        description: 空间 ID
+        example: ""
+        type: string
+      pageSize:
+        description: 页面大小
+        type: integer
+      sortField:
+        description: 排序字段
+        type: string
+      sortOrder:
+        description: 排序顺序（默认升序）
+        type: string
+      spaceLevel:
+        description: 空间级别：0-普通版 1-专业版 2-旗舰版 使用指针来区分0和未传参
+        type: integer
+      spaceName:
+        description: 空间名称
+        type: string
+      spaceType:
+        description: 空间类型：0-个人空间 1-团队空间 使用指针来区分0和未传参
+        type: integer
+      userId:
+        description: 用户 ID
+        example: ""
+        type: string
+    type: object
+  space.SpaceUpdateRequest:
+    properties:
+      id:
+        description: Space ID
+        example: ""
+        type: string
+      maxCount:
+        description: Maximum number of space images
+        type: integer
+      maxSize:
+        description: Maximum total size of space images
+        type: integer
+      spaceLevel:
+        description: 'Space level: 0-普通版 1-专业版 2-旗舰版'
+        type: integer
+      spaceName:
+        description: Space name
+        type: string
+    type: object
+  space.SpaceVO:
+    properties:
+      createTime:
+        type: string
+      editTime:
+        type: string
+      id:
+        description: Space ID
+        example: ""
+        type: string
+      maxCount:
+        type: integer
+      maxSize:
+        type: integer
+      permissionList:
+        description: 空间的权限列表
+        items:
+          type: string
+        type: array
+      spaceLevel:
+        type: integer
+      spaceName:
+        type: string
+      spaceType:
+        description: 'Space type: 0 - 私人空间, 1 - 团队空间'
+        type: integer
+      totalCount:
+        type: integer
+      totalSize:
+        type: integer
+      updateTime:
+        type: string
+      user:
+        $ref: '#/definitions/user.UserVO'
+      userId:
+        description: User ID
+        example: ""
+        type: string
+    type: object
+  spaceuser.SpaceUserAddRequest:
+    properties:
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+      spaceRole:
+        description: 空间角色：viewer-查看者 editor-编辑者 admin-管理员
+        type: string
+      userId:
+        description: 用户ID
+        example: ""
+        type: string
+    type: object
+  spaceuser.SpaceUserEditRequest:
+    properties:
+      Id:
+        description: 表的元组ID
+        example: ""
+        type: string
+      spaceRole:
+        description: 空间角色：viewer-查看者 editor-编辑者 admin-管理员
+        type: string
+    type: object
+  spaceuser.SpaceUserQueryRequest:
+    properties:
+      Id:
+        description: 表的元组ID
+        example: ""
+        type: string
+      spaceId:
+        description: 空间ID
+        example: ""
+        type: string
+      spaceRole:
+        description: 空间角色：viewer-查看者 editor-编辑者 admin-管理员
+        type: string
+      userId:
+        description: 用户ID
+        example: ""
+        type: string
+    type: object
+  spaceuser.SpaceUserRemoveRequest:
+    properties:
+      Id:
+        description: 表的元组ID
+        example: ""
+        type: string
+    type: object
+  spaceuser.SpaceUserVO:
+    properties:
+      createTime:
+        type: string
+      id:
+        example: ""
+        type: string
+      space:
+        allOf:
+        - $ref: '#/definitions/space.SpaceVO'
+        description: 空间信息
+      spaceId:
+        example: ""
+        type: string
+      spaceRole:
+        type: string
+      updateTime:
+        type: string
+      user:
+        allOf:
+        - $ref: '#/definitions/user.UserVO'
+        description: 用户信息
+      userId:
+        example: ""
+        type: string
+    type: object
+  user.UserLoginRequest:
+    properties:
+      userAccount:
+        type: string
+      userPassword:
+        type: string
+    required:
+    - userAccount
+    - userPassword
+    type: object
+  user.UserLoginVO:
+    properties:
+      createTime:
+        type: string
+      editTime:
+        type: string
+      id:
+        example: ""
+        type: string
+      updateTime:
+        type: string
+      userAccount:
+        type: string
+      userAvatar:
+        type: string
+      userName:
+        type: string
+      userProfile:
+        type: string
+      userRole:
+        type: string
+    type: object
+  user.UserRegsiterRequest:
+    properties:
+      checkPassword:
+        type: string
+      userAccount:
+        type: string
+      userPassword:
+        type: string
+    required:
+    - checkPassword
+    - userAccount
+    - userPassword
+    type: object
+  user.UserVO:
+    properties:
+      createTime:
+        type: string
+      id:
+        example: ""
+        type: string
+      userAccount:
+        type: string
+      userAvatar:
+        type: string
+      userName:
+        type: string
+      userProfile:
+        type: string
+      userRole:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8001
+info:
+  contact:
+    email: lwh24621@qq.com
+    name: lwhhhh
+    url: 无
+  description: CanvasCloud
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: 无服务条款
+  title: CanvasCloud
+  version: "1.0"
+paths:
+  /v1/file/test/download:
+    get:
+      parameters:
+      - description: 文件存储在 COS 的 KEY
+        in: query
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: 返回文件流
+          schema:
+            type: file
+        "400":
+          description: 下载失败，详情见响应中的 code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 测试文件下载接口「管理员」
+      tags:
+      - file
+  /v1/file/test/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 响应文件存储在COS的KEY
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 测试文件上传接口「管理员」
+      tags:
+      - file
+  /v1/picture/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 图片的ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/common.DeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 删除失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 根据ID软删除图片「登录校验」
+      tags:
+      - picture
+  /v1/picture/edit:
+    post:
+      consumes:
+      - application/json
+      description: 若图片不存在，则返回false
+      parameters:
+      - description: 需要更新的图片信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 编辑图片
+      tags:
+      - picture
+  /v1/picture/edit/batch:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 批量的图片ID、空间ID和分类和标签
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureEditByBatchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 批量更新图片请求「登录校验」
+      tags:
+      - picture
+  /v1/picture/get:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 图片的ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.Picture'
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 根据ID获取图片「管理员」
+      tags:
+      - picture
+  /v1/picture/get/vo:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 图片的ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.PictureVO'
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 根据ID获取脱敏的图片
+      tags:
+      - picture
+  /v1/picture/list/page:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 需要查询的页数、以及图片关键信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.ListPictureResponse'
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 分页获取一系列图片信息「管理员」
+      tags:
+      - picture
+  /v1/picture/list/page/vo:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 需要查询的页数、以及图片关键信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.ListPictureVOResponse'
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 分页获取一系列图片信息
+      tags:
+      - picture
+  /v1/picture/list/page/vo/cache:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 需要查询的页数、以及图片关键信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.ListPictureVOResponse'
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 带有缓存的分页获取一系列图片信息
+      tags:
+      - picture
+  /v1/picture/out_painting/create_task:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 任务的ID
+        in: query
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功，返回任务进展信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.GetOutPaintingResponse'
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取AI扩图任务信息「登录校验」
+      tags:
+      - picture
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 创建扩图任务所需信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.CreateOutPaintingTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功，返回任务信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.CreateOutPaintingTaskResponse'
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 创建AI扩图任务请求「登录校验」
+      tags:
+      - picture
+  /v1/picture/review:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 审核图片所需信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureReviewRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 审核更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 执行图片审核「管理员」
+      tags:
+      - picture
+  /v1/picture/search/color:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 图片的颜色和空间ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureSearchByColorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/picture.PictureVO'
+                  type: array
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 根据图片的颜色搜索相似图片「登录校验」
+      tags:
+      - picture
+  /v1/picture/search/picture:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 图片的ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureSearchByPictureRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.ImageSearchResult'
+                  type: array
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 根据图片ID搜索图片
+      tags:
+      - picture
+  /v1/picture/tag_category:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.PictureTagCategory'
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取图片的标签和分类（固定）
+      tags:
+      - picture
+  /v1/picture/update:
+    post:
+      consumes:
+      - application/json
+      description: 若图片不存在，则返回false
+      parameters:
+      - description: 需要更新的图片信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 更新图片「登录校验」
+      tags:
+      - picture
+  /v1/picture/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 根据是否存在ID来上传图片或者修改图片信息，返回图片信息视图
+      parameters:
+      - description: 图片
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: 图片的ID，非必需
+        in: formData
+        name: id
+        type: string
+      - description: 图片的上传空间ID，非必需
+        in: formData
+        name: spaceId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上传成功，返回图片信息视图
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.PictureVO'
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 上传图片接口「需要登录校验」
+      tags:
+      - picture
+  /v1/picture/upload/url:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 图片URL
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/picture.PictureUploadRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上传成功，返回图片信息视图
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/picture.PictureVO'
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 根据URL上传图片接口「需要登录校验」
+      tags:
+      - picture
+  /v1/space/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 需要增加的空间信息字段
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/space.SpaceAddRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回空间ID，字符串格式
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 增加空间「需要登录」
+      tags:
+      - space
+  /v1/space/analyze/category:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 查询条件
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/analyze.SpaceCategoryAnalyzeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/analyze.SpaceCategoryAnalyzeResponse'
+                  type: array
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取空间图片分类分析「登录校验」
+      tags:
+      - space/analyze
+  /v1/space/analyze/rank:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 查询条件
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/analyze.SpaceRankAnalyzeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.Space'
+                  type: array
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取空间使用情况排名「管理员」
+      tags:
+      - space/analyze
+  /v1/space/analyze/size:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 查询条件
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/analyze.SpaceSizeAnalyzeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/analyze.SpaceSizeAnalyzeResponse'
+                  type: array
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取空间图片大小范围统计分析「登录校验」
+      tags:
+      - space/analyze
+  /v1/space/analyze/tag:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 查询条件
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/analyze.SpaceTagAnalyzeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/analyze.SpaceTagAnalyzeResponse'
+                  type: array
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取空间标签出现量分析「登录校验」
+      tags:
+      - space/analyze
+  /v1/space/analyze/usage:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 查询条件
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/analyze.SpaceUsageAnalyzeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/analyze.SpaceUsageAnalyzeResponse'
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取空间使用分析「登录校验」
+      tags:
+      - space/analyze
+  /v1/space/analyze/user:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 查询条件
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/analyze.SpaceUserAnalyzeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/analyze.SpaceUserAnalyzeResponse'
+                  type: array
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取用户上传图片统计分析，支持分析特定用户「登录校验」
+      tags:
+      - space/analyze
+  /v1/space/edit:
+    post:
+      consumes:
+      - application/json
+      description: 若空间不存在，则返回false
+      parameters:
+      - description: 需要更新的空间信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/space.SpaceEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 编辑空间昵称
+      tags:
+      - space
+  /v1/space/get/vo:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 空间的ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/space.SpaceVO'
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取当个空间的视图信息「登录校验」
+      tags:
+      - space
+  /v1/space/list/level:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回所有空间等级信息数组
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/space.SpaceLevelResponse'
+                  type: array
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取所有的空间等级信息
+      tags:
+      - space
+  /v1/space/list/page:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 需要查询的空间信息字段
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/space.SpaceQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/space.ListSpaceResponse'
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 分页获取一系列空间信息「管理员」
+      tags:
+      - space
+  /v1/space/list/page/vo:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 需要查询的空间信息字段
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/space.SpaceQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/space.ListSpaceVOResponse'
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 分页获取一系列空间视图信息
+      tags:
+      - space
+  /v1/space/update:
+    post:
+      consumes:
+      - application/json
+      description: 若空间不存在，则返回false
+      parameters:
+      - description: 需要更新的空间信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/space.SpaceUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 更新失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 更新空间「管理员」
+      tags:
+      - space
+  /v1/spaceUser/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 成员的ID和空间ID，以及添加的成员角色
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/spaceuser.SpaceUserAddRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回空间成员表的数据ID，字符串格式
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 增加成员到空间
+      tags:
+      - spaceUser
+  /v1/spaceUser/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 空间成员表中数据的ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/spaceuser.SpaceUserRemoveRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回成功与否
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 从空间移除成员
+      tags:
+      - spaceUser
+  /v1/spaceUser/edit:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 记录的ID和需要调整的权限
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/spaceuser.SpaceUserEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 编辑成功与否
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 编辑成员权限
+      tags:
+      - spaceUser
+  /v1/spaceUser/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 必须携带spaceID和userID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/spaceuser.SpaceUserQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回成功与否
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.SpaceUser'
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 查询某个成员在某个空间的信息
+      tags:
+      - spaceUser
+  /v1/spaceUser/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 可以携带的参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/spaceuser.SpaceUserQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回详细数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/spaceuser.SpaceUserVO'
+                  type: array
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 查询成员信息列表
+      tags:
+      - spaceUser
+  /v1/spaceUser/list/my:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回详细数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/spaceuser.SpaceUserVO'
+                  type: array
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 查询我加入的团队空间列表
+      tags:
+      - spaceUser
+  /v1/user/get/login:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取用户视图成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserLoginVO'
+              type: object
+        "400":
+          description: 获取失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取登录的用户信息
+      tags:
+      - user
+  /v1/user/get/vo:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户的ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功，返回用户的脱敏信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserVO'
+              type: object
+        "400":
+          description: 查询失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 根据ID获取简略信息用户
+      tags:
+      - user
+  /v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: 根据账号密码进行登录
+      parameters:
+      - description: 用户登录请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功，返回用户视图
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserLoginVO'
+              type: object
+        "400":
+          description: 登录失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 用户登录
+      tags:
+      - user
+  /v1/user/logout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 退出成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: boolean
+              type: object
+        "400":
+          description: 注册失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 执行用户注销（退出）
+      tags:
+      - user
+  /v1/user/register:
+    post:
+      consumes:
+      - application/json
+      description: 根据账号密码进行注册
+      parameters:
+      - description: 用户请求注册参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.UserRegsiterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注册成功，返回注册用户的ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 注册失败，详情见响应中的code
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 注册用户
+      tags:
+      - user
+securityDefinitions:
+  CookieAuth:
+    in: cookie
+    name: gsessionid
+    type: apiKey
+swagger: "2.0"
