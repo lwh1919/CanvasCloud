@@ -1,0 +1,2 @@
+{"level":"INFO","time":"2025-07-29T17:44:53.036+0200","caller":"cmd/main.go:66","msg":"雪花ID生成器初始化成功"}
+{"level":"FATAL","time":"2025-07-29T17:44:53.068+0200","caller":"cmd/main.go:70","msg":"MySQL初始化失败","error":"dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it."}
