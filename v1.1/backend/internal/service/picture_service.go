@@ -22,9 +22,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"golang.org/x/sync/singleflight"
-	"gorm.io/gorm"
 	"log"
 	"math"
 	"math/rand/v2"
@@ -36,6 +33,10 @@ import (
 	"sync"
 	"time"
 	"unicode/utf8"
+
+	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/sync/singleflight"
+	"gorm.io/gorm"
 )
 
 var listGroup singleflight.Group
@@ -1009,7 +1010,6 @@ func (s *PictureService) UploadPictureByBatch(req *reqPicture.PictureUploadByBat
 	// 为什么选择goquery：提供jQuery风格的API，简化HTML解析
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		// 为什么记录详细错误：便于生产环境问题排查
 		log.Println("解析失败，错误为", err)
 		return 0, ecode.GetErrWithDetail(ecode.SYSTEM_ERROR, "解析失败")
 	}

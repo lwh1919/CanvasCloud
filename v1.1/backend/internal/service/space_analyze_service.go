@@ -1,10 +1,6 @@
 package service
 
 import (
-	"encoding/json"
-	"gorm.io/gorm"
-	"math"
-	"sort"
 	"backend/internal/consts"
 	"backend/internal/ecode"
 	"backend/internal/model/entity"
@@ -12,6 +8,11 @@ import (
 	resSpaceAnalyze "backend/internal/model/response/space/analyze"
 	"backend/internal/repository"
 	"backend/pkg/mysql"
+	"encoding/json"
+	"math"
+	"sort"
+
+	"gorm.io/gorm"
 )
 
 type SpaceAnalyzeService struct {

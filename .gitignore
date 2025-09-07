@@ -1,0 +1,9 @@
+# 忽略所有 .enc 文件
+*.enc
+# 忽略所有 .idea 目录
+.idea/
+# 忽略所有 .codebudy 目录
+.codebudy/
+# 忽略所有 log 目录
+log/
+v1.2/
