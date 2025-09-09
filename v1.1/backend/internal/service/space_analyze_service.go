@@ -9,8 +9,9 @@ import (
 	"backend/internal/repository"
 	"backend/pkg/mysql"
 	"encoding/json"
+	"log"
 	"math"
-	"sort"
+	"sync"
 
 	"gorm.io/gorm"
 )
@@ -195,71 +196,188 @@ func (s *SpaceAnalyzeService) GetSpaceTagAnalyze(req *reqSpaceAnalyze.SpaceTagAn
 	return result, nil
 }
 
-// 获取空间大小统计分析
+// 空间大小统计打点器
+var spaceSizeMetrics = make(map[uint64]*SpaceSizeMetrics)
+var metricsMutex sync.RWMutex
+
+// InitSpaceSizeMetrics 初始化历史数据到打点器
+func InitSpaceSizeMetrics() {
+	// 使用一条SQL查询直接获取所有空间的图片大小分布统计
+	var results []struct {
+		SpaceID uint64 `gorm:"column:space_id"`
+		Range   string `gorm:"column:range"`
+		Count   int64  `gorm:"column:count"`
+	}
+
+	err := mysql.LoadDB().Raw(`
+		SELECT 
+			space_id,
+			CASE 
+				WHEN pic_size < 102400 THEN '<100KB'
+				WHEN pic_size < 512000 THEN '100KB-500KB'
+				WHEN pic_size < 1048576 THEN '500KB-1MB'
+				ELSE '>1MB'
+			END as range,
+			COUNT(*) as count
+		FROM pictures 
+		WHERE space_id IS NOT NULL
+		GROUP BY space_id, range
+	`).Scan(&results).Error
+
+	if err != nil {
+		log.Printf("初始化空间大小统计失败: %v", err)
+		return
+	}
+
+	// 按空间ID分组处理结果
+	spaceMetrics := make(map[uint64]*SpaceSizeMetrics)
+
+	for _, result := range results {
+		if _, exists := spaceMetrics[result.SpaceID]; !exists {
+			spaceMetrics[result.SpaceID] = &SpaceSizeMetrics{}
+		}
+
+		metrics := spaceMetrics[result.SpaceID]
+		switch result.Range {
+		case "<100KB":
+			metrics.Bucket100K = result.Count
+		case "100KB-500KB":
+			metrics.Bucket500K = result.Count
+		case "500KB-1MB":
+			metrics.Bucket1M = result.Count
+		case ">1MB":
+			metrics.Bucket1MPlus = result.Count
+		}
+	}
+
+	// 批量更新内存中的指标
+	metricsMutex.Lock()
+	for spaceID, metrics := range spaceMetrics {
+		spaceSizeMetrics[spaceID] = metrics
+	}
+	metricsMutex.Unlock()
+}
+
+type SpaceSizeMetrics struct {
+	Bucket100K   int64
+	Bucket500K   int64
+	Bucket1M     int64
+	Bucket1MPlus int64
+}
+
+// 更新空间大小统计
+func updateSpaceSizeMetrics(spaceID uint64, picSize int64, op ...int64) {
+	metricsMutex.Lock()
+	defer metricsMutex.Unlock()
+
+	if _, exists := spaceSizeMetrics[spaceID]; !exists {
+		spaceSizeMetrics[spaceID] = &SpaceSizeMetrics{}
+	}
+
+	// 默认操作为增加(1)，如果传入参数则使用传入的值
+	operation := int64(1)
+	if len(op) > 0 {
+		operation = op[0]
+	}
+
+	metrics := spaceSizeMetrics[spaceID]
+	switch {
+	case picSize < 100*1024:
+		metrics.Bucket100K += operation
+	case picSize < 500*1024:
+		metrics.Bucket500K += operation
+	case picSize < 1024*1024:
+		metrics.Bucket1M += operation
+	default:
+		metrics.Bucket1MPlus += operation
+	}
+}
+
+// 获取空间大小统计分析（打点版本）
 func (s *SpaceAnalyzeService) GetSpaceSizeAnalyze(req *reqSpaceAnalyze.SpaceSizeAnalyzeRequest, loginUser *entity.User) ([]resSpaceAnalyze.SpaceSizeAnalyzeResponse, *ecode.ErrorWithCode) {
-	//权限校验
+	// 权限校验
 	if err := s.CheckSpaceAnalyzeAuth(&req.SpaceAnalyzeRequest, loginUser); err != nil {
 		return nil, err
 	}
-	//获取查询对象
-	query := mysql.LoadDB()
-	query = query.Model(&entity.Picture{})
-	//补充空间字段
-	query, err := s.FillAnalyzeQueryWrapper(query, &req.SpaceAnalyzeRequest)
-	if err != nil {
+
+	// 初始化打点数据（首次查询时）
+	if err := initMetricsIfNeeded(req.SpaceID); err != nil {
 		return nil, err
 	}
-	//查询大小统计
-	var picsSize []int64
-	if originErr := query.Pluck("pic_size", &picsSize).Error; originErr != nil {
-		return nil, ecode.GetErrWithDetail(ecode.SYSTEM_ERROR, "数据库查询失败")
+
+	// 直接读取打点数据
+	metricsMutex.RLock()
+	metrics := spaceSizeMetrics[req.SpaceID]
+	metricsMutex.RUnlock()
+
+	return []resSpaceAnalyze.SpaceSizeAnalyzeResponse{
+		{SizeRange: "<100KB", Count: metrics.Bucket100K},
+		{SizeRange: "100KB-500KB", Count: metrics.Bucket500K},
+		{SizeRange: "500KB-1MB", Count: metrics.Bucket1M},
+		{SizeRange: ">1MB", Count: metrics.Bucket1MPlus},
+	}, nil
+}
+
+// 初始化打点数据（仅首次）
+func initMetricsIfNeeded(spaceID uint64) *ecode.ErrorWithCode {
+	// 使用双重检查锁定模式，减少锁竞争
+	metricsMutex.RLock()
+	_, exists := spaceSizeMetrics[spaceID]
+	metricsMutex.RUnlock()
+
+	if exists {
+		return nil
 	}
-	sort.Slice(picsSize, func(i, j int) bool {
-		return picsSize[i] < picsSize[j]
-	})
-	var result []resSpaceAnalyze.SpaceSizeAnalyzeResponse
-	//区间划分为：[0,100KB), [100KB,500KB), [500KB,1MB),[1MB,*]
-	target := []int{100 * 1024, 500 * 1024, 1024 * 1024} //边界定义
-	targetToRange := []string{"<100KB", "100KB-500KB", "500KB-1MB", ">1MB"}
-	needSub := 0
-	for i := 0; i < len(target); i++ {
-		//找到第一个大于等于target[i]的元素
-		index := sort.Search(len(picsSize), func(j int) bool {
-			if picsSize[j] < int64(target[i]) {
-				return false
-			}
-			return true
-		})
-		if index < len(picsSize) {
-			//找到了，index左侧都是<target[i]的元素
-			result = append(result, resSpaceAnalyze.SpaceSizeAnalyzeResponse{
-				SizeRange: targetToRange[i],
-				Count:     int64(index - needSub),
-			})
-			//若是最后一个，要处理剩余的元素
-			if i == len(target)-1 {
-				result = append(result, resSpaceAnalyze.SpaceSizeAnalyzeResponse{
-					SizeRange: targetToRange[i+1],
-					Count:     int64(len(picsSize) - index),
-				})
-			}
-			needSub = index
-		} else {
-			//没有找到，说明该区间没有元素，直接添加
-			result = append(result, resSpaceAnalyze.SpaceSizeAnalyzeResponse{
-				SizeRange: targetToRange[i],
-				Count:     0,
-			})
-			if i == len(target)-1 {
-				//最后一个区间，添加剩余元素
-				result = append(result, resSpaceAnalyze.SpaceSizeAnalyzeResponse{
-					SizeRange: targetToRange[i+1],
-					Count:     0,
-				})
-			}
+
+	// 使用一次性查询获取所有区间的统计数据
+	var counts []struct {
+		Range string `gorm:"column:range"`
+		Count int64  `gorm:"column:count"`
+	}
+
+	err := mysql.LoadDB().Raw(`
+		SELECT 
+			CASE 
+				WHEN pic_size < 102400 THEN '<100KB'
+				WHEN pic_size < 512000 THEN '100KB-500KB'
+				WHEN pic_size < 1048576 THEN '500KB-1MB'
+				ELSE '>1MB'
+			END as range,
+			COUNT(*) as count
+		FROM pictures 
+		WHERE space_id = ?
+		GROUP BY range
+	`, spaceID).Scan(&counts).Error
+
+	if err != nil {
+		return ecode.GetErrWithDetail(ecode.SYSTEM_ERROR, "初始化统计失败")
+	}
+
+	// 初始化计数
+	metrics := &SpaceSizeMetrics{}
+	for _, c := range counts {
+		switch c.Range {
+		case "<100KB":
+			metrics.Bucket100K = c.Count
+		case "100KB-500KB":
+			metrics.Bucket500K = c.Count
+		case "500KB-1MB":
+			metrics.Bucket1M = c.Count
+		case ">1MB":
+			metrics.Bucket1MPlus = c.Count
 		}
 	}
-	return result, nil
+
+	// 再次检查并更新，避免并发初始化
+	metricsMutex.Lock()
+	defer metricsMutex.Unlock()
+
+	// 再次检查是否已被其他协程初始化
+	if _, exists := spaceSizeMetrics[spaceID]; !exists {
+		spaceSizeMetrics[spaceID] = metrics
+	}
+
+	return nil
 }
 
 // 获取规定时间周期内，用户上传图片的情况

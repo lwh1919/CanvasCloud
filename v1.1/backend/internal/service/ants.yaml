@@ -1,0 +1,51 @@
+ants_options:
+  size:
+    1:经验公式：poolSize = CPU核心数 * N。N通常在 2 到 10 之间
+    
+    # CPU 密集型任务 (计算为主): N接近 CPU 核心数 (1-2倍)。过多 goroutine 会导致频繁上下文切换，反而降低性能。
+    # I/O 密集型任务 (网络、磁盘读写为主): N可以设置得较高 (5倍、10倍甚至更高)。因为 goroutine 在等待 I/O 时会阻塞，高 N可以让 CPU 在等待期间处理其他任务，提高吞吐量。
+  
+    2：任务到达率与处理时间 结合 Little's Law (利特尔法则) L = λ * W
+    # L: 系统中平均任务数 (包括排队和执行中的) ≈ 所需最小 poolSize(理想无排队时)
+    # λ: 任务平均到达率 (tasks/second)
+    # W: 任务平均处理时间 (seconds/task)
+    # 如果每秒有 100 个任务到达 (λ=100)，每个任务平均耗时 0.05 秒 (W=0.05)，则 L ≈ 100 * 0.05 = 5。这意味着池大小至少需要 5。为了应对突发流量和避免瞬时排队，通常会设置得比 L大一些 (如 10-20)。
+    # 内存限制: 每个 goroutine 有初始栈开销 (约 2KB，可增长)。poolSize过大可能导致内存占用过高。
+    # 外部资源限制: 如数据库连接池大小、下游服务并发限制等。poolSize不应超过这些外部限制。
+
+    3:压测
+
+  ExpiryDuration:
+    1:指定空闲 goroutine 的存活时间。如果一个 goroutine 在 ExpiryDuration时间内没有获取到新任务，它将被回收销毁
+    
+    2:调优考虑
+      #设置过短 频繁创建销毁 goroutine，增加开销。
+      #设置过长：负载突降时资源释放不及时。
+      #对于负载波动较大的服务，合理设置此值有助于节省资源。如果负载一直很高或非常稳定，此值影响不大。
+  PreAlloc:
+    1:是否在创建池时预分配所有 goroutine
+      #作用:
+      #true: 初始化时一次性创建 poolSize个 goroutine。优点： 后续提交任务响应更快 (无需等待创建 goroutine)。缺点： 启动时资源消耗大，即使没有任务。
+      #false: 按需创建 goroutine，直到达到 poolSize。优点： 启动快，资源按需使用。缺点： 任务突增时，前几个任务可能因创建 goroutine 有轻微延迟。
+      #选择: 通常 false是更好的默认选择，除非对任务提交的瞬时延迟要求极高且能接受启动开销
+  MaxBlockingTasks:
+    1:当池已满 (所有 goroutine 都在忙 且任务队列已满) 时，允许阻塞等待提交的任务的最大数量
+      #默认值: 0(意味着当池满且队列满时，Submit会立即返回错误 ants.ErrPoolOverload)。
+      #作用: 提供一种有界阻塞的提交策略，避免任务被直接丢弃或无限阻塞。
+      #调优考虑:
+      #设置一个合理的值 (如 100, 1000) 可以在瞬时高峰时让任务排队等待，而不是直接失败。
+      #设置过大等同于无界阻塞，可能导致调用方内存耗尽或严重延迟。
+      #需要配合任务队列长度 (Nonblocking) 一起考虑。
+  Nonblocking:
+      #控制任务队列的行为。
+      #默认值: false。
+      #作用:
+      #false(默认，阻塞模式)：当池中 goroutine 都在忙时，新任务会进入一个无界队列等待。如果 MaxBlockingTasks > 0且队列满，则按 MaxBlockingTasks规则处理。
+      #true(非阻塞模式)：当池中 goroutine 都在忙时，Submit会立即返回错误 ants.ErrPoolOverload，不会排队。
+      #需要任务排队等待执行时用 false(默认)。
+      #需要快速失败 (Fast Failover)，将负载转移到其他地方 (如返回错误给客户端、降级处理、使用其他实例) 时用 true。通常需要配合 MaxBlockingTasks=0。
+  #目的：限制 Nonblocking=false(阻塞模式) 下，等待进入队列的任务数量。 它只在 Nonblocking=false时生效
+  PanicHandler(可选):
+      #一个 func(interface{})类型的函数，用于处理任务执行过程中发生的 panic。
+      #默认值: nil(panic 会向上抛出，可能导致整个程序崩溃)。
+      #强烈建议设置！ 捕获任务 panic，防止单个任务崩溃影响整个池甚至服务

@@ -18,6 +18,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/panjf2000/ants/v2 v2.11.3
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/redis/go-redis/v9 v9.11.0
 	github.com/sony/sonyflake v1.3.0
 	github.com/spf13/viper v1.20.1
@@ -90,7 +91,6 @@ require (
 	github.com/mozillazg/go-httpheader v0.2.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230126093431-47fa9a501578 // indirect
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect

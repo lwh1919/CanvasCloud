@@ -4,8 +4,9 @@ import (
 	"backend/config"
 	"backend/internal/consts"
 	"fmt"
-	amqp "github.com/rabbitmq/amqp091-go" // RabbitMQ 官方库
 	"log"
+
+	amqp "github.com/rabbitmq/amqp091-go" // RabbitMQ 官方库
 )
 
 // 全局连接池实例

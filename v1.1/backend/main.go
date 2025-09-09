@@ -103,7 +103,12 @@ func main() {
 		zap.L().Fatal("mq初始化失败", zap.Error(err))
 	}
 	zap.L().Info("mq启动成功")
-	// 10. 启动mq
+	
+	// 10. 初始化空间图片大小统计打点器
+	service.InitSpaceSizeMetrics()
+	zap.L().Info("空间图片大小统计打点器初始化成功")
+	
+	// 11. 启动mq
 	go func() {
 		service.OutPaintingBackgroundService()
 	}()

@@ -204,6 +204,12 @@ func (s *PictureService) UploadPicture(picFile interface{}, PictureUploadRequest
 	if originErr != nil {
 		return nil, ecode.GetErrWithDetail(ecode.SYSTEM_ERROR, "数据库错误")
 	}
+
+	// 打点更新空间图片大小统计
+	if space != nil {
+		updateSpaceSizeMetrics(space.ID, pic.PicSize, 1) // 增加计数
+	}
+
 	userVO := resUser.GetUserVO(*loginUser)
 	picVO := resPicture.EntityToVO(*pic, userVO)
 	return &picVO, nil
@@ -263,6 +269,12 @@ func (s *PictureService) DeletePicture(loginUser *entity.User, deleReq *common.D
 	if err != nil {
 		return ecode.GetErrWithDetail(ecode.SYSTEM_ERROR, "数据库错误")
 	}
+
+	// 打点更新空间图片大小统计
+	if space != nil {
+		updateSpaceSizeMetrics(space.ID, oldPic.PicSize, -1) // 减少计数
+	}
+
 	return nil
 }
 
