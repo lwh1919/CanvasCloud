@@ -8,10 +8,16 @@ import (
 	"backend/internal/model/entity"
 	reqPicture "backend/internal/model/request/picture"
 	resPicture "backend/internal/model/response/picture"
+	resUser "backend/internal/model/response/user"
 	"backend/internal/service"
-	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/gin-gonic/gin"
+
 	//resPicture "CanvasCloud/internal/models/response/picture"
 	imgSearchModel "backend/internal/api/imagesearch/model"
 )
@@ -69,7 +75,55 @@ func UploadPicture(c *gin.Context) {
 	}
 	common.Success(c, *picVO)
 }
-func UploadPicture2(c *gin.Context) {
+func UploadPicture2Md5(c *gin.Context) {
+	md5 := c.PostForm("md5")
+	if md5 == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "缺少MD5参数"})
+		return
+	}
+	// 检查是否已存在相同MD5的文件
+	fingerprint := sPicture.FindFingerprintByMD5(md5)
+	if fingerprint != nil {
+		// 文件已存在，直接返回文件信息（秒传）
+		log.Printf("文件秒传成功: %s", md5)
+
+		// 获取当前登录用户
+		loginUser, err := sUser.GetLoginUser(c)
+		if err != nil {
+			common.BaseResponse(c, nil, err.Msg, err.Code)
+			return
+		}
+
+		// 从文件指纹构建图片对象
+		pic := &entity.Picture{
+			URL:          fingerprint.URL,
+			ThumbnailURL: fingerprint.ThumbnailURL,
+			Name:         fingerprint.FileName,
+			PicSize:      fingerprint.FileSize,
+			PicWidth:     fingerprint.PicWidth,
+			PicHeight:    fingerprint.PicHeight,
+			PicFormat:    fingerprint.PicFormat,
+			PicColor:     fingerprint.PicColor,
+			UserID:       loginUser.ID,
+			EditTime:     time.Now(),
+		}
+
+		// 手动解析表单参数
+		id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+		spaceId, _ := strconv.ParseUint(c.PostForm("spaceId"), 10, 64)
+
+		// 设置ID和空间ID
+		if id != 0 {
+			pic.ID = id
+		}
+		pic.SpaceID = spaceId
+
+		// 构建并返回PictureVO对象
+		userVO := resUser.GetUserVO(*loginUser)
+		picVO := resPicture.EntityToVO(*pic, userVO)
+		common.Success(c, picVO)
+		return
+	}
 	file, _ := c.FormFile("file")
 	// 手动解析表单参数
 	id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
@@ -84,6 +138,76 @@ func UploadPicture2(c *gin.Context) {
 		return
 	}
 	picVO, err := sPicture.UploadPicture(file, picReq, loginUser)
+	if err != nil {
+		common.BaseResponse(c, nil, err.Msg, err.Code)
+		return
+	}
+	common.Success(c, *picVO)
+}
+func UploadPicture2(c *gin.Context) {
+	// 检查是否有MD5参数，如果有则尝试秒传
+	md5 := c.PostForm("md5")
+	if md5 != "" {
+		// 检查是否已存在相同MD5的文件
+		fingerprint := sPicture.FindFingerprintByMD5(md5)
+		if fingerprint != nil {
+			// 文件已存在，直接返回文件信息（秒传）
+			log.Printf("文件秒传成功: %s", md5)
+
+			// 获取当前登录用户
+			loginUser, err := sUser.GetLoginUser(c)
+			if err != nil {
+				common.BaseResponse(c, nil, err.Msg, err.Code)
+				return
+			}
+
+			// 从文件指纹构建图片对象
+			pic := &entity.Picture{
+				URL:          fingerprint.URL,
+				ThumbnailURL: fingerprint.ThumbnailURL,
+				Name:         fingerprint.FileName,
+				PicSize:      fingerprint.FileSize,
+				PicWidth:     fingerprint.PicWidth,
+				PicHeight:    fingerprint.PicHeight,
+				PicFormat:    fingerprint.PicFormat,
+				PicColor:     fingerprint.PicColor,
+				UserID:       loginUser.ID,
+				EditTime:     time.Now(),
+			}
+
+			// 手动解析表单参数
+			id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+			spaceId, _ := strconv.ParseUint(c.PostForm("spaceId"), 10, 64)
+
+			// 设置ID和空间ID
+			if id != 0 {
+				pic.ID = id
+			}
+			pic.SpaceID = spaceId
+
+			// 构建并返回PictureVO对象
+			userVO := resUser.GetUserVO(*loginUser)
+			picVO := resPicture.EntityToVO(*pic, userVO)
+			common.Success(c, picVO)
+			return
+		}
+	}
+
+	// 如果没有MD5参数或者MD5不存在，则正常上传
+	file, _ := c.FormFile("file")
+	// 手动解析表单参数
+	id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+	spaceId, _ := strconv.ParseUint(c.PostForm("spaceId"), 10, 64)
+	picReq := &reqPicture.PictureUploadRequest{
+		ID:      id,      // 获取 id
+		SpaceID: spaceId, // 获取 spaceId
+	}
+	loginUser, err := sUser.GetLoginUser(c)
+	if err != nil {
+		common.BaseResponse(c, nil, err.Msg, err.Code)
+		return
+	}
+	picVO, err := sPicture.UploadPicture2(file, picReq, loginUser)
 	if err != nil {
 		common.BaseResponse(c, nil, err.Msg, err.Code)
 		return

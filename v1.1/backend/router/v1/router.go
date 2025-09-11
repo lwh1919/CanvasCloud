@@ -95,6 +95,7 @@ func registerPictureRoutes(apiV1 *gin.RouterGroup) {
 		pictureAPI.POST("/upload/url", midwares.JWTAuthMiddleware(), controller.UploadPictureByUrl)
 		pictureAPI.POST("/upload/url2", midwares.JWTAuthMiddleware(), controller.UploadPictureByUrl2)
 		pictureAPI.POST("/upload/batch", midwares.JWTAuthMiddleware(), midwares.AuthCheck(consts.ADMIN_ROLE), controller.UploadPictureByBatch)
+		pictureAPI.POST("/upload2/md5", midwares.JWTAuthMiddleware(), controller.UploadPicture2Md5)
 		pictureAPI.POST("/delete", midwares.JWTAuthMiddleware(), controller.DeletePicture)
 		pictureAPI.POST("/update", midwares.JWTAuthMiddleware(), controller.UpdatePicture)
 		pictureAPI.POST("/edit", midwares.JWTAuthMiddleware(), controller.EditPicture)

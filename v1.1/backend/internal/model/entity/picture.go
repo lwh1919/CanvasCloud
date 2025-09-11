@@ -32,12 +32,29 @@ type Picture struct {
 	SpaceID       uint64         `gorm:"index:idx_spaceId;comment:空间 id;default:null" json:"spaceId,string" swaggertype:"string"`
 	PicColor      string         `gorm:"type:varchar(16);comment:主色调" json:"picColor"`
 }
+type FileFingerprint struct {
+	MD5          string    `json:"md5"`         // 文件MD5哈希值
+	FileKey      string    `json:"file_key"`    // COS中的文件路径
+	FileName     string    `json:"file_name"`   // 文件名称
+	FileSize     int64     `json:"file_size"`   // 文件大小
+	PicWidth     int       `json:"pic_width"`   // 图片宽度
+	PicHeight    int       `json:"pic_height"`  // 图片高度
+	PicFormat    string    `json:"pic_format"`  // 图片格式
+	PicColor     string    `json:"pic_color"`   // 主色调
+	UploadTime   time.Time `json:"upload_time"` // 上传时间
+	URL          string    `json:"url"`
+	ThumbnailURL string    `json:"thumbnail_url"`
+}
 
 // AutoMigratePicture 执行数据库迁移
 func AutoMigratePicture(db *gorm.DB) {
 	err := db.AutoMigrate(&Picture{})
 	if err != nil {
 		panic("⚠️ 用户表迁移失败: " + err.Error())
+	}
+	err = db.AutoMigrate(&FileFingerprint{})
+	if err != nil {
+		panic("文件指纹迁移失败" + err.Error())
 	}
 }
 
