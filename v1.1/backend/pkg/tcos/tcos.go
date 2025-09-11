@@ -1,6 +1,7 @@
 package tcos
 
 import (
+	"backend/config"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -12,7 +13,6 @@ import (
 	"os"
 	"strings"
 	"time"
-	"backend/config"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 )
@@ -193,6 +193,61 @@ func PutPictureWithCompress(f io.Reader, key string) (*cos.Response, error) {
 		return nil, err
 	}
 	return res, nil
+}
+
+// 高级上传(整体读+分块传)
+func ChunkPutObjectFromLocal(key, path string) error {
+	var err error
+	//高级上传设置(分块)
+	opt := &cos.MultiUploadOptions{
+		ThreadPoolSize: 5,
+		CheckPoint:     true, // 显式开启断点续传功能
+	}
+	_, _, err = tcos.Object.Upload(
+		context.Background(), key, path, opt,
+	)
+
+	return err
+}
+
+// 处理本地路径图片并进行压缩和生成缩略图 (分步策略：先分块上传，后处理图片)
+func ProcessPutPictureWithCompress(path, key string) error {
+	// 1. 使用分块上传将本地文件上传到COS
+	err := ChunkPutObjectFromLocal(key, path)
+	if err != nil {
+		return fmt.Errorf("分块上传失败: %v", err)
+	}
+
+	// 2. 准备图片处理规则：生成WebP格式和缩略图
+	lastIdx := strings.LastIndex(key, ".")
+	var newKey string
+	var thumbnailKey string
+
+	if lastIdx != -1 {
+		keyNoType := key[:lastIdx]
+		keyType := key[lastIdx:]
+		newKey = keyNoType + ".webp"                      // WebP格式输出文件
+		thumbnailKey = keyNoType + "_thumbnail" + keyType // 缩略图输出文件
+	}
+
+	// 3. 构建图片处理操作
+	picOps := &cos.PicOperations{
+		IsPicInfo: 1, // 返回原图信息
+		Rules: []cos.PicOperationsRules{
+			{
+				Rule:   "imageMogr2/format/webp/quality/85", // 转换为WebP格式并压缩
+				FileId: newKey,                              // 输出文件路径
+			},
+			{
+				Rule:   "imageMogr2/thumbnail/!256x256r/interlace/1/format/jpg/quality/85", // 生成缩略图
+				FileId: thumbnailKey,                                                       // 缩略图输出路径
+			},
+		},
+	}
+	// 5. 调用图像处理API处理已上传的图片[1,3](@ref)
+	_, _, err = tcos.CI.ImageProcess(context.Background(), key, picOps)
+
+	return err
 }
 
 // 获取图片详细信息，返回详细信息的结构体

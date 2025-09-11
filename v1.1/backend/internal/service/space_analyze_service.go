@@ -205,7 +205,7 @@ func InitSpaceSizeMetrics() {
 	// 使用一条SQL查询直接获取所有空间的图片大小分布统计
 	var results []struct {
 		SpaceID uint64 `gorm:"column:space_id"`
-		Range   string `gorm:"column:range"`
+		Range   string `gorm:"column:size_range"`
 		Count   int64  `gorm:"column:count"`
 	}
 
@@ -217,11 +217,11 @@ func InitSpaceSizeMetrics() {
 				WHEN pic_size < 512000 THEN '100KB-500KB'
 				WHEN pic_size < 1048576 THEN '500KB-1MB'
 				ELSE '>1MB'
-			END as range,
+			END as size_range,
 			COUNT(*) as count
 		FROM pictures 
 		WHERE space_id IS NOT NULL
-		GROUP BY space_id, range
+		GROUP BY space_id, size_range
 	`).Scan(&results).Error
 
 	if err != nil {
@@ -233,22 +233,22 @@ func InitSpaceSizeMetrics() {
 	spaceMetrics := make(map[uint64]*SpaceSizeMetrics)
 
 	for _, result := range results {
-		if _, exists := spaceMetrics[result.SpaceID]; !exists {
-			spaceMetrics[result.SpaceID] = &SpaceSizeMetrics{}
-		}
+			if _, exists := spaceMetrics[result.SpaceID]; !exists {
+				spaceMetrics[result.SpaceID] = &SpaceSizeMetrics{}
+			}
 
-		metrics := spaceMetrics[result.SpaceID]
-		switch result.Range {
-		case "<100KB":
-			metrics.Bucket100K = result.Count
-		case "100KB-500KB":
-			metrics.Bucket500K = result.Count
-		case "500KB-1MB":
-			metrics.Bucket1M = result.Count
-		case ">1MB":
-			metrics.Bucket1MPlus = result.Count
+			metrics := spaceMetrics[result.SpaceID]
+			switch result.Range {
+			case "<100KB":
+				metrics.Bucket100K = result.Count
+			case "100KB-500KB":
+				metrics.Bucket500K = result.Count
+			case "500KB-1MB":
+				metrics.Bucket1M = result.Count
+			case ">1MB":
+				metrics.Bucket1MPlus = result.Count
+			}
 		}
-	}
 
 	// 批量更新内存中的指标
 	metricsMutex.Lock()
@@ -331,7 +331,7 @@ func initMetricsIfNeeded(spaceID uint64) *ecode.ErrorWithCode {
 
 	// 使用一次性查询获取所有区间的统计数据
 	var counts []struct {
-		Range string `gorm:"column:range"`
+		Range string `gorm:"column:size_range"`
 		Count int64  `gorm:"column:count"`
 	}
 
@@ -342,11 +342,11 @@ func initMetricsIfNeeded(spaceID uint64) *ecode.ErrorWithCode {
 				WHEN pic_size < 512000 THEN '100KB-500KB'
 				WHEN pic_size < 1048576 THEN '500KB-1MB'
 				ELSE '>1MB'
-			END as range,
+			END as size_range,
 			COUNT(*) as count
 		FROM pictures 
 		WHERE space_id = ?
-		GROUP BY range
+		GROUP BY size_range
 	`, spaceID).Scan(&counts).Error
 
 	if err != nil {
@@ -354,19 +354,19 @@ func initMetricsIfNeeded(spaceID uint64) *ecode.ErrorWithCode {
 	}
 
 	// 初始化计数
-	metrics := &SpaceSizeMetrics{}
-	for _, c := range counts {
-		switch c.Range {
-		case "<100KB":
-			metrics.Bucket100K = c.Count
-		case "100KB-500KB":
-			metrics.Bucket500K = c.Count
-		case "500KB-1MB":
-			metrics.Bucket1M = c.Count
-		case ">1MB":
-			metrics.Bucket1MPlus = c.Count
+		metrics := &SpaceSizeMetrics{}
+		for _, c := range counts {
+			switch c.Range {
+			case "<100KB":
+				metrics.Bucket100K = c.Count
+			case "100KB-500KB":
+				metrics.Bucket500K = c.Count
+			case "500KB-1MB":
+				metrics.Bucket1M = c.Count
+			case ">1MB":
+				metrics.Bucket1MPlus = c.Count
+			}
 		}
-	}
 
 	// 再次检查并更新，避免并发初始化
 	metricsMutex.Lock()

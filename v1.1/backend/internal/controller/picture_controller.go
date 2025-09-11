@@ -69,6 +69,27 @@ func UploadPicture(c *gin.Context) {
 	}
 	common.Success(c, *picVO)
 }
+func UploadPicture2(c *gin.Context) {
+	file, _ := c.FormFile("file")
+	// 手动解析表单参数
+	id, _ := strconv.ParseUint(c.PostForm("id"), 10, 64)
+	spaceId, _ := strconv.ParseUint(c.PostForm("spaceId"), 10, 64)
+	picReq := &reqPicture.PictureUploadRequest{
+		ID:      id,      // 获取 id
+		SpaceID: spaceId, // 获取 spaceId
+	}
+	loginUser, err := sUser.GetLoginUser(c)
+	if err != nil {
+		common.BaseResponse(c, nil, err.Msg, err.Code)
+		return
+	}
+	picVO, err := sPicture.UploadPicture(file, picReq, loginUser)
+	if err != nil {
+		common.BaseResponse(c, nil, err.Msg, err.Code)
+		return
+	}
+	common.Success(c, *picVO)
+}
 
 // UploadPictureByUrl godoc
 // @Summary      根据URL上传图片接口「需要登录校验」
@@ -95,6 +116,28 @@ func UploadPictureByUrl(c *gin.Context) {
 		picReq.FileUrl = picReq.FileUrl[:idx]
 	}
 	picVO, err := sPicture.UploadPicture(picReq.FileUrl, picReq, loginUser)
+	if err != nil {
+		common.BaseResponse(c, nil, err.Msg, err.Code)
+		return
+	}
+	common.Success(c, *picVO)
+}
+
+func UploadPictureByUrl2(c *gin.Context) {
+	picReq := &reqPicture.PictureUploadRequest{}
+	c.ShouldBind(picReq)
+	loginUser, err := sUser.GetLoginUser(c)
+	if err != nil {
+		common.BaseResponse(c, nil, err.Msg, err.Code)
+		return
+	}
+	//对于AI扩图，携带的query参数需要保留，因为一些具有时效性
+	remove := strings.Contains(picReq.FileUrl, "OSSAccess")
+	//对于一般网站，若picUrl包含了?解析参数，需要去掉
+	if idx := strings.LastIndex(picReq.FileUrl, "?"); idx != -1 && !remove {
+		picReq.FileUrl = picReq.FileUrl[:idx]
+	}
+	picVO, err := sPicture.UploadPicture2(picReq.FileUrl, picReq, loginUser)
 	if err != nil {
 		common.BaseResponse(c, nil, err.Msg, err.Code)
 		return
@@ -753,31 +796,3 @@ func GetOutPaintingTaskResponse(c *gin.Context) {
 	common.Success(c, *res)
 
 }
-
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车
-//回车

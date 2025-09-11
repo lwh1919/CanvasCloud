@@ -1,0 +1,51 @@
+{"level":"INFO","time":"2025-09-10T03:46:50.528+0800","caller":"backend/main.go:64","msg":"雪花ID生成器初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:46:50.885+0800","caller":"backend/main.go:71","msg":"MySQL初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:46:50.894+0800","caller":"backend/main.go:78","msg":"Redis初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:46:50.895+0800","caller":"backend/main.go:84","msg":"缓存初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:46:51.245+0800","caller":"backend/main.go:90","msg":"COS初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:46:51.344+0800","caller":"backend/main.go:97","msg":"Casbin初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:48.524+0800","caller":"backend/main.go:64","msg":"雪花ID生成器初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:48.781+0800","caller":"backend/main.go:71","msg":"MySQL初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:48.788+0800","caller":"backend/main.go:78","msg":"Redis初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:48.789+0800","caller":"backend/main.go:84","msg":"缓存初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:50.257+0800","caller":"backend/main.go:90","msg":"COS初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:50.363+0800","caller":"backend/main.go:97","msg":"Casbin初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:50.427+0800","caller":"backend/main.go:105","msg":"mq启动成功"}
+{"level":"INFO","time":"2025-09-10T03:55:50.433+0800","caller":"backend/main.go:109","msg":"空间图片大小统计打点器初始化成功"}
+{"level":"INFO","time":"2025-09-10T03:55:50.461+0800","caller":"backend/main.go:119","msg":"应用启动成功","version":"1.0.0","go_version":"go1.24.3"}
+{"level":"INFO","time":"2025-09-10T04:18:12.507+0800","caller":"backend/main.go:139","msg":"Shutdown Server ..."}
+{"level":"INFO","time":"2025-09-10T04:18:12.510+0800","caller":"backend/main.go:143","msg":"Casbin异步系统已关闭"}
+{"level":"INFO","time":"2025-09-10T04:18:12.511+0800","caller":"backend/main.go:153","msg":"Server exiting..."}
+{"level":"INFO","time":"2025-09-10T04:18:15.797+0800","caller":"backend/main.go:64","msg":"雪花ID生成器初始化成功"}
+{"level":"INFO","time":"2025-09-10T04:18:15.947+0800","caller":"backend/main.go:71","msg":"MySQL初始化成功"}
+{"level":"INFO","time":"2025-09-10T04:18:15.951+0800","caller":"backend/main.go:78","msg":"Redis初始化成功"}
+{"level":"INFO","time":"2025-09-10T04:18:15.952+0800","caller":"backend/main.go:84","msg":"缓存初始化成功"}
+{"level":"INFO","time":"2025-09-10T04:18:17.796+0800","caller":"backend/main.go:90","msg":"COS初始化成功"}
+{"level":"INFO","time":"2025-09-10T04:18:17.908+0800","caller":"backend/main.go:97","msg":"Casbin初始化成功"}
+{"level":"INFO","time":"2025-09-10T04:18:17.972+0800","caller":"backend/main.go:105","msg":"mq启动成功"}
+{"level":"INFO","time":"2025-09-10T04:18:17.973+0800","caller":"backend/main.go:109","msg":"空间图片大小统计打点器初始化成功"}
+{"level":"INFO","time":"2025-09-10T04:18:17.976+0800","caller":"backend/main.go:119","msg":"应用启动成功","version":"1.0.0","go_version":"go1.24.3"}
+{"level":"INFO","time":"2025-09-10T05:38:03.653+0800","caller":"backend/main.go:64","msg":"雪花ID生成器初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:38:04.076+0800","caller":"backend/main.go:71","msg":"MySQL初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:38:04.084+0800","caller":"backend/main.go:78","msg":"Redis初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:38:04.085+0800","caller":"backend/main.go:84","msg":"缓存初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:38:06.215+0800","caller":"backend/main.go:90","msg":"COS初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:38:06.301+0800","caller":"backend/main.go:97","msg":"Casbin初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:38:06.366+0800","caller":"backend/main.go:105","msg":"mq启动成功"}
+{"level":"INFO","time":"2025-09-10T05:38:06.368+0800","caller":"backend/main.go:109","msg":"空间图片大小统计打点器初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:38:06.371+0800","caller":"backend/main.go:119","msg":"应用启动成功","version":"1.0.0","go_version":"go1.24.3"}
+{"level":"INFO","time":"2025-09-10T05:39:01.726+0800","caller":"backend/main.go:139","msg":"Shutdown Server ..."}
+{"level":"INFO","time":"2025-09-10T05:39:01.739+0800","caller":"backend/main.go:143","msg":"Casbin异步系统已关闭"}
+{"level":"INFO","time":"2025-09-10T05:39:01.747+0800","caller":"backend/main.go:153","msg":"Server exiting..."}
+{"level":"INFO","time":"2025-09-10T05:40:24.713+0800","caller":"backend/main.go:64","msg":"雪花ID生成器初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:40:24.932+0800","caller":"backend/main.go:71","msg":"MySQL初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:40:24.939+0800","caller":"backend/main.go:78","msg":"Redis初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:40:24.940+0800","caller":"backend/main.go:84","msg":"缓存初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:40:27.070+0800","caller":"backend/main.go:90","msg":"COS初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:40:27.235+0800","caller":"backend/main.go:97","msg":"Casbin初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:40:27.288+0800","caller":"backend/main.go:105","msg":"mq启动成功"}
+{"level":"INFO","time":"2025-09-10T05:40:27.298+0800","caller":"backend/main.go:109","msg":"空间图片大小统计打点器初始化成功"}
+{"level":"INFO","time":"2025-09-10T05:40:27.299+0800","caller":"backend/main.go:119","msg":"应用启动成功","version":"1.0.0","go_version":"go1.24.3"}
+{"level":"INFO","time":"2025-09-10T05:49:11.948+0800","caller":"backend/main.go:139","msg":"Shutdown Server ..."}
+{"level":"INFO","time":"2025-09-10T05:49:11.956+0800","caller":"backend/main.go:143","msg":"Casbin异步系统已关闭"}
+{"level":"INFO","time":"2025-09-10T05:49:11.962+0800","caller":"backend/main.go:153","msg":"Server exiting..."}

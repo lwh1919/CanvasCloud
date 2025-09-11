@@ -1,9 +1,10 @@
 package entity
 
 import (
-	"gorm.io/gorm"
-	"time"
 	"backend/pkg/snowflake"
+	"time"
+
+	"gorm.io/gorm"
 )
 
 type Picture struct {
